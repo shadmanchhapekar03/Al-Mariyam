@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dGrad" x1="0%" y1="0%" x2="100%">
+      <stop offset="0%" style="stop-color:#1abc9c;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#1abc9c;stop-opacity:0.7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" fill="#f8f8f8"/>
+
+  <!-- Shadow -->
+  <ellipse cx="150" cy="370" rx="80" ry="12" fill="#00000015"/>
+  <!-- Thermometer body -->
+  <rect x="130" y="40" width="40" height="240" rx="6" fill="#1abc9c" stroke="#333" stroke-width="2"/>
+  <rect x="138" y="50" width="24" height="220" fill="#f5f5f5" stroke="none"/>
+
+  <!-- Mercury level -->
+  <rect x="140" y="180" width="20" height="90" fill="#ff6b6b"/>
+
+  <!-- Bulb -->
+  <circle cx="150" cy="300" r="22" fill="#1abc9c" stroke="#333" stroke-width="2"/>
+  <circle cx="150" cy="300" r="16" fill="#ff6b6b" opacity="0.8"/>
+
+  <!-- Display numbers -->
+  <text x="150" y="160" font-family="Arial" font-size="12" text-anchor="middle" fill="#666">98.6°F</text>
+
+  <!-- Title -->
+  <text x="150" y="350" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1abc9c">
+    Digital Thermometer
+  </text>
+  <text x="150" y="370" font-family="Arial" font-size="10" text-anchor="middle" fill="#999">
+    Fast & Accurate
+  </text>
+</svg>

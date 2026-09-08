@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dGrad" x1="0%" y1="0%" x2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#e74c3c;stop-opacity:0.7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" fill="#f8f8f8"/>
+
+  <!-- Shadow -->
+  <ellipse cx="150" cy="370" rx="80" ry="12" fill="#00000015"/>
+  <!-- BP Monitor body -->
+  <rect x="70" y="60" width="160" height="140" rx="8" fill="#e74c3c" stroke="#333" stroke-width="2"/>
+
+  <!-- Screen -->
+  <rect x="85" y="75" width="130" height="80" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="150" y="105" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">120/80</text>
+  <text x="150" y="130" font-family="Arial" font-size="11" text-anchor="middle" fill="#666">mmHg</text>
+
+  <!-- Buttons -->
+  <circle cx="100" cy="165" r="12" fill="#666" stroke="#333" stroke-width="1"/>
+  <circle cx="150" cy="165" r="12" fill="#666" stroke="#333" stroke-width="1"/>
+  <circle cx="200" cy="165" r="12" fill="#666" stroke="#333" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="150" y="260" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e74c3c">
+    BP Monitor
+  </text>
+  <text x="150" y="280" font-family="Arial" font-size="10" text-anchor="middle" fill="#999">
+    Automatic • Portable
+  </text>
+</svg>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="jGrad" x1="0%" y1="0%" x2="100%">
+      <stop offset="0%" style="stop-color:#ff6b00;stop-opacity:0.85"/>
+      <stop offset="100%" style="stop-color:#ff9933;stop-opacity:0.75"/>
+    </linearGradient>
+    <linearGradient id="liqGrad" x1="20%" y1="0%" x2="80%">
+      <stop offset="0%" style="stop-color:#ff9933;stop-opacity:0.8"/>
+      <stop offset="50%" style="stop-color:#ff9933;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#ff6b00;stop-opacity:0.7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" fill="#f0f0f0"/>
+
+  <!-- Shadow -->
+  <ellipse cx="150" cy="385" rx="85" ry="12" fill="#00000018"/>
+
+  <!-- Cap -->
+  <rect x="128" y="12" width="44" height="14" rx="2" fill="#2d5016" stroke="#1a3009" stroke-width="1"/>
+  <circle cx="150" cy="15" r="28" fill="#ffffff" opacity="0.2"/>
+
+  <!-- Neck -->
+  <path d="M 133 26 L 120 58 L 180 58 L 167 26 Z" fill="url(#jGrad)" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Bottle -->
+  <path d="M 120 58 Q 105 100 105 160 Q 105 240 128 310 L 172 310 Q 195 240 195 160 Q 195 100 180 58 Z"
+        fill="url(#jGrad)" stroke="#333" stroke-width="2" opacity="0.85"/>
+
+  <!-- Juice liquid -->
+  <path d="M 125 110 Q 115 140 115 200 Q 115 260 135 310 L 165 310 Q 185 260 185 200 Q 185 140 175 110 Z"
+        fill="url(#liqGrad)" opacity="0.9"/>
+
+  <!-- Shine effect -->
+  <ellipse cx="135" cy="100" rx="12" ry="50" fill="#ffffff" opacity="0.2"/>
+
+  <!-- Label -->
+  <rect x="108" y="115" width="84" height="120" rx="4" fill="#ffffffee" stroke="#ddd" stroke-width="1.5"/>
+
+  <!-- Label content -->
+  <text x="150" y="150" font-family="Arial,sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#ff6b00">
+    Real
+  </text>
+  <text x="150" y="172" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#666">
+    100% Natural
+  </text>
+  <text x="150" y="192" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#999">
+    1L • Fresh • Juice
+  </text>
+
+  <!-- Bottom highlight -->
+  <ellipse cx="150" cy="315" rx="60" ry="10" fill="#ffffff" opacity="0.12"/>
+</svg>
