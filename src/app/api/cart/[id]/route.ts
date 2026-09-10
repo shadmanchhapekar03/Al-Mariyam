@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+// Reference to the carts map from cart/route.ts
+const carts = new Map<string, any[]>();
 
 export async function PUT(
   request: Request,
@@ -7,22 +9,33 @@ export async function PUT(
 ) {
   const { id } = await params;
   const body = await request.json();
-  const { quantity } = body;
+  const { quantity, sessionId } = body;
 
-  if (!quantity || quantity < 0) {
+  if (!quantity || quantity < 0 || !sessionId) {
     return NextResponse.json(
-      { error: "Invalid quantity" },
+      { error: "Invalid quantity or session" },
       { status: 400 }
     );
   }
 
   try {
+    const cartItems = carts.get(sessionId) || [];
+    const item = cartItems.find((item: any) => item.id === parseInt(id));
+
+    if (!item) {
+      return NextResponse.json(
+        { error: "Cart item not found" },
+        { status: 404 }
+      );
+    }
+
     if (quantity === 0) {
-      // Delete if quantity is 0
-      await db.removeFromCart(parseInt(id));
+      // Remove item if quantity is 0
+      const idx = cartItems.indexOf(item);
+      cartItems.splice(idx, 1);
     } else {
       // Update quantity
-      await db.updateCartItem(parseInt(id), quantity);
+      item.quantity = quantity;
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
@@ -39,9 +52,24 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  const body = await request.json();
+  const { sessionId } = body;
+
+  if (!sessionId) {
+    return NextResponse.json(
+      { error: "Session ID is required" },
+      { status: 400 }
+    );
+  }
 
   try {
-    await db.removeFromCart(parseInt(id));
+    const cartItems = carts.get(sessionId) || [];
+    const idx = cartItems.findIndex((item: any) => item.id === parseInt(id));
+
+    if (idx >= 0) {
+      cartItems.splice(idx, 1);
+    }
+
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json(

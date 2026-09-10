@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+// In-memory storage for orders (prototype only - resets on redeploy)
+const orders: any[] = [];
+const orderItems: any[] = [];
+let orderId = 0;
+let orderItemId = 0;
 
 function generateOrderNumber() {
   return `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
@@ -36,7 +41,8 @@ export async function POST(request: Request) {
   try {
     const orderNumber = generateOrderNumber();
 
-    const createdOrder = await db.createOrder({
+    const createdOrder = {
+      id: ++orderId,
       orderNumber,
       customerName,
       email,
@@ -45,11 +51,15 @@ export async function POST(request: Request) {
       totalAmount,
       paymentMethod,
       status: "pending",
-    });
+      createdAt: new Date().toISOString(),
+    };
+
+    orders.push(createdOrder);
 
     // Add order items
     for (const item of items) {
-      await db.addOrderItem({
+      orderItems.push({
+        id: ++orderItemId,
         orderId: createdOrder.id,
         productId: item.productId,
         productName: item.productName,
@@ -82,9 +92,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const allOrders = await db.getOrders();
-    const userOrders = allOrders.filter((order: any) => order.email === email);
-
+    const userOrders = orders.filter((order: any) => order.email === email);
     return NextResponse.json({ orders: userOrders }, { status: 200 });
   } catch (error) {
     return NextResponse.json(

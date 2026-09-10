@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { db } from "../../../../db/index";
+
+// In-memory storage for appointments (prototype only - resets on redeploy)
+const appointments: any[] = [];
+let appointmentId = 0;
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -12,14 +15,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const created = await db.createAppointment({
+  const created = {
+    id: ++appointmentId,
     fullName,
     email,
     phone,
     department,
     preferredDate,
     message: message ?? "",
-  });
+    createdAt: new Date().toISOString(),
+  };
+
+  appointments.push(created);
 
   return NextResponse.json({ appointment: created }, { status: 201 });
 }

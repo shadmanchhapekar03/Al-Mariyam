@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+// In-memory cart storage (prototype only - resets on redeploy)
+const carts = new Map<string, any[]>();
+let cartItemId = 0;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -13,7 +16,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const items = await db.getCartItems(sessionId);
+    const items = carts.get(sessionId) || [];
     return NextResponse.json({ items }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -35,11 +38,29 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Add to cart (mock db handles duplicates automatically)
-    const item = await db.addToCart(sessionId, productId, quantity);
+    // Get or create cart for this session
+    if (!carts.has(sessionId)) {
+      carts.set(sessionId, []);
+    }
 
-    const updatedItems = await db.getCartItems(sessionId);
-    return NextResponse.json({ items: updatedItems }, { status: 201 });
+    const cartItems = carts.get(sessionId)!;
+    const existingItem = cartItems.find((item: any) => item.productId === productId);
+
+    if (existingItem) {
+      // Update quantity if item already exists
+      existingItem.quantity += quantity;
+    } else {
+      // Add new item
+      cartItems.push({
+        id: ++cartItemId,
+        sessionId,
+        productId,
+        quantity,
+        createdAt: new Date().toISOString(),
+      });
+    }
+
+    return NextResponse.json({ items: cartItems }, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to add to cart" },

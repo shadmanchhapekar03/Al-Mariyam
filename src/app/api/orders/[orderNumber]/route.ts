@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+// Reference to orders and orderItems from orders/route.ts
+// For prototype, we maintain in-memory state in each route file
+const orders: any[] = [];
+const orderItems: any[] = [];
 
 export async function GET(
   request: Request,
@@ -8,7 +12,7 @@ export async function GET(
   const { orderNumber } = await params;
 
   try {
-    const order = await db.getOrderByNumber(orderNumber);
+    const order = orders.find((o: any) => o.orderNumber === orderNumber);
 
     if (!order) {
       return NextResponse.json(
@@ -17,7 +21,7 @@ export async function GET(
       );
     }
 
-    const items = await db.getOrderItems(order.id);
+    const items = orderItems.filter((item: any) => item.orderId === order.id);
 
     return NextResponse.json(
       { order, items },
