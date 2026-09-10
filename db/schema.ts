@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { pgTable, serial, text, timestamp, decimal, integer, boolean } from "drizzle-orm/pg-core";
-=======
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
->>>>>>> 2c52a54d30a5d91de170c57e82db7ccfdb6c02e1
 
 export const appointments = pgTable("appointments", {
   id: serial().primaryKey(),
@@ -24,7 +20,6 @@ export const contactMessages = pgTable("contact_messages", {
   message: text().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
-<<<<<<< HEAD
 
 export const products = pgTable("products", {
   id: serial().primaryKey(),
@@ -70,5 +65,3 @@ export const orderItems = pgTable("order_items", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   quantity: integer().notNull(),
 });
-=======
->>>>>>> 2c52a54d30a5d91de170c57e82db7ccfdb6c02e1
