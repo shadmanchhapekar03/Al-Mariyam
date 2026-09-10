@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../../db/index";
-import { contactMessages } from "../../../../db/schema";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -13,10 +12,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const [created] = await db
-    .insert(contactMessages)
-    .values({ name, email, subject, message })
-    .returning();
+  const created = await db.createContactMessage({ name, email, subject, message });
 
   return NextResponse.json({ message: created }, { status: 201 });
 }

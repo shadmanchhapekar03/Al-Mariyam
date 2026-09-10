@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { orders, orderItems } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 function generateOrderNumber() {
   return `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
@@ -38,27 +36,24 @@ export async function POST(request: Request) {
   try {
     const orderNumber = generateOrderNumber();
 
-    const [createdOrder] = await db
-      .insert(orders)
-      .values({
-        orderNumber,
-        customerName,
-        email,
-        phone,
-        shippingAddress,
-        totalAmount: totalAmount.toString(),
-        paymentMethod,
-        status: "pending",
-      })
-      .returning();
+    const createdOrder = await db.createOrder({
+      orderNumber,
+      customerName,
+      email,
+      phone,
+      shippingAddress,
+      totalAmount,
+      paymentMethod,
+      status: "pending",
+    });
 
     // Add order items
     for (const item of items) {
-      await db.insert(orderItems).values({
+      await db.addOrderItem({
         orderId: createdOrder.id,
         productId: item.productId,
         productName: item.productName,
-        price: item.price.toString(),
+        price: item.price,
         quantity: item.quantity,
       });
     }
@@ -87,10 +82,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    const userOrders = await db
-      .select()
-      .from(orders)
-      .where(eq(orders.email, email));
+    const allOrders = await db.getOrders();
+    const userOrders = allOrders.filter((order: any) => order.email === email);
 
     return NextResponse.json({ orders: userOrders }, { status: 200 });
   } catch (error) {

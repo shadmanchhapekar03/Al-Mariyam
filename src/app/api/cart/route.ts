@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { cartItems, products as productsTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -15,11 +13,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const items = await db
-      .select()
-      .from(cartItems)
-      .where(eq(cartItems.sessionId, sessionId));
-
+    const items = await db.getCartItems(sessionId);
     return NextResponse.json({ items }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -41,51 +35,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Check if product exists
-    const product = await db
-      .select()
-      .from(productsTable)
-      .where(eq(productsTable.id, productId));
+    // Add to cart (mock db handles duplicates automatically)
+    const item = await db.addToCart(sessionId, productId, quantity);
 
-    if (product.length === 0) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
-    }
-
-    // Check if item already in cart
-    const existing = await db
-      .select()
-      .from(cartItems)
-      .where(
-        eq(cartItems.sessionId, sessionId)
-      );
-
-    const existingItem = existing.find(
-      (item) => item.productId === productId
-    );
-
-    if (existingItem) {
-      // Update quantity
-      await db
-        .update(cartItems)
-        .set({ quantity: existingItem.quantity + quantity })
-        .where(eq(cartItems.id, existingItem.id));
-    } else {
-      // Add new item
-      await db.insert(cartItems).values({
-        sessionId,
-        productId,
-        quantity,
-      });
-    }
-
-    const updatedItems = await db
-      .select()
-      .from(cartItems)
-      .where(eq(cartItems.sessionId, sessionId));
-
+    const updatedItems = await db.getCartItems(sessionId);
     return NextResponse.json({ items: updatedItems }, { status: 201 });
   } catch (error) {
     return NextResponse.json(

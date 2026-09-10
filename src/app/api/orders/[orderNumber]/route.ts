@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { orders, orderItems } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export async function GET(
   request: Request,
@@ -10,25 +8,19 @@ export async function GET(
   const { orderNumber } = await params;
 
   try {
-    const order = await db
-      .select()
-      .from(orders)
-      .where(eq(orders.orderNumber, orderNumber));
+    const order = await db.getOrderByNumber(orderNumber);
 
-    if (order.length === 0) {
+    if (!order) {
       return NextResponse.json(
         { error: "Order not found" },
         { status: 404 }
       );
     }
 
-    const items = await db
-      .select()
-      .from(orderItems)
-      .where(eq(orderItems.orderId, order[0].id));
+    const items = await db.getOrderItems(order.id);
 
     return NextResponse.json(
-      { order: order[0], items },
+      { order, items },
       { status: 200 }
     );
   } catch (error) {

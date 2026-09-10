@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { cartItems } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export async function PUT(
   request: Request,
@@ -21,13 +19,10 @@ export async function PUT(
   try {
     if (quantity === 0) {
       // Delete if quantity is 0
-      await db.delete(cartItems).where(eq(cartItems.id, parseInt(id)));
+      await db.removeFromCart(parseInt(id));
     } else {
       // Update quantity
-      await db
-        .update(cartItems)
-        .set({ quantity })
-        .where(eq(cartItems.id, parseInt(id)));
+      await db.updateCartItem(parseInt(id), quantity);
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
@@ -46,7 +41,7 @@ export async function DELETE(
   const { id } = await params;
 
   try {
-    await db.delete(cartItems).where(eq(cartItems.id, parseInt(id)));
+    await db.removeFromCart(parseInt(id));
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
